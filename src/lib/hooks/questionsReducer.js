@@ -37,6 +37,7 @@ export function reducer(state, action) {
         status: newSecondsRemaining === 0 ? "finished" : state.status,
       };
     default:
+      console.log(action.type);
       throw new Error("Unknown action!!");
   }
 }

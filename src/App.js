@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import Header from "./Components/Header";
 import Main from "./Components/main/Main";
 import Loader from "./Components/common/Loader";
@@ -14,43 +12,8 @@ import FinishScreen from "./Components/main/FinishScreen";
 import { useQuestions } from "./lib/hooks/useQuestions";
 
 function App() {
-  const { state, dispatch } = useQuestions();
-
-  const {
-    questions,
-    status,
-    error,
-    index,
-    answer,
-    points,
-    highscore,
-    secondsRemaining,
-  } = state;
-  const numQuestions = questions.length;
-  const maxPossiblePoints = questions.reduce(
-    (acc, question) => acc + question.points,
-    0
-  );
-
-  function startQuiz() {
-    dispatch({ type: "start" });
-  }
-  function selectAnswer(answerIndex) {
-    dispatch({ type: "newAnswer", payload: answerIndex });
-  }
-  function nextQuestion() {
-    if (index + 1 === numQuestions) {
-      dispatch({ type: "finished" });
-    } else {
-      dispatch({ type: "nextQuestion" });
-    }
-  }
-  function restartQuiz() {
-    dispatch({ type: "reset" });
-  }
-  function tick() {
-    dispatch({ type: "tick" });
-  }
+  const { state } = useQuestions();
+  const { status } = state;
 
   return (
     <div className="App">
@@ -59,45 +22,24 @@ function App() {
       <Main>
         {status === "loading" && <Loader />}
 
-        {status === "error" && <Error err={error} />}
+        {status === "error" && <Error />}
 
-        {status === "ready" && (
-          <StartScreen numQuestions={numQuestions} dispatch={startQuiz} />
-        )}
+        {status === "ready" && <StartScreen />}
 
         {status === "active" && (
           <>
-            <Progress
-              index={index}
-              numQuestions={numQuestions}
-              points={points}
-              maxPoints={maxPossiblePoints}
-              answer={answer}
-            />
+            <Progress />
 
-            <Question
-              question={questions[index]}
-              dispatch={selectAnswer}
-              answer={answer}
-            />
+            <Question />
 
             <Footer>
-              <Timer timeRemaining={secondsRemaining} action={tick} />
-              <NextButton action={nextQuestion} answer={answer}>
-                {index + 1 === numQuestions ? "Finish" : "Next"}
-              </NextButton>
+              <Timer />
+              <NextButton />
             </Footer>
           </>
         )}
 
-        {status === "finished" && (
-          <FinishScreen
-            points={points}
-            maxPoints={maxPossiblePoints}
-            highscore={highscore}
-            action={restartQuiz}
-          />
-        )}
+        {status === "finished" && <FinishScreen />}
       </Main>
     </div>
   );

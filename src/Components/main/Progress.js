@@ -1,4 +1,14 @@
-function Progress({ index, numQuestions, points, maxPoints, answer }) {
+import { useQuestions } from "../../lib/hooks/useQuestions";
+
+function Progress() {
+  const { index, questions, points, answer } = useQuestions().state;
+  const numQuestions = questions.length;
+
+  const maxPossiblePoints = questions.reduce(
+    (acc, question) => acc + question.points,
+    0
+  );
+
   return (
     <header className="progress">
       <progress
@@ -11,7 +21,7 @@ function Progress({ index, numQuestions, points, maxPoints, answer }) {
       </p>
 
       <p>
-        Points: <strong>{points}</strong> / <strong>{maxPoints}</strong>
+        Points: <strong>{points}</strong> / <strong>{maxPossiblePoints}</strong>
       </p>
     </header>
   );

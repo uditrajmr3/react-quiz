@@ -1,20 +1,28 @@
 import { useEffect } from "react";
+import { useQuestions } from "../../lib/hooks/useQuestions";
 
-function Timer({ timeRemaining, action }) {
-  const mins = Math.floor(timeRemaining / 60);
-  const secs = timeRemaining % 60;
+function Timer() {
+  const { state, dispatch } = useQuestions();
+  const { secondsRemaining } = state;
+
+  const mins = Math.floor(secondsRemaining / 60);
+  const secs = secondsRemaining % 60;
 
   useEffect(
     function () {
+      function tick() {
+        dispatch({ type: "tick" });
+      }
+
       const timer = setInterval(function () {
-        action();
+        tick();
       }, 1000);
 
       return function () {
         clearInterval(timer);
       };
     },
-    [action]
+    [dispatch]
   );
 
   return (

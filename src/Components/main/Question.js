@@ -1,16 +1,15 @@
+import { useQuestions } from "../../lib/hooks/useQuestions";
 import Options from "./Options";
 
-function Question({ question, dispatch, answer }) {
+function Question() {
+  const { questions, index } = useQuestions().state;
+  const question = questions.at(index);
+
   return (
     <div>
       <h4>{question.question}</h4>
 
-      <Options
-        options={question?.options}
-        action={dispatch}
-        answer={answer}
-        correctAnswer={question.correctOption}
-      />
+      <Options />
     </div>
   );
 }

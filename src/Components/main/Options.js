@@ -1,8 +1,14 @@
-function Options({ options, correctAnswer, action, answer }) {
+import { useQuestions } from "../../lib/hooks/useQuestions";
+
+function Options() {
+  const { state, dispatch } = useQuestions();
+  const { answer, questions, index } = state;
+  const { options, correctOption } = questions.at(index);
   const hasAnswered = answer !== null;
 
   function selectAnswer(answerIndex) {
-    action(answerIndex);
+    console.log(answerIndex, options, correctOption);
+    dispatch({ type: "newAnswer", payload: answerIndex });
   }
 
   return (
@@ -12,7 +18,7 @@ function Options({ options, correctAnswer, action, answer }) {
           key={option}
           disabled={hasAnswered}
           className={`btn btn-option ${index === answer ? "answer" : ""} ${
-            hasAnswered ? (index === correctAnswer ? "correct" : "wrong") : ""
+            hasAnswered ? (index === correctOption ? "correct" : "wrong") : ""
           }`}
           onClick={() => selectAnswer(index)}
         >
